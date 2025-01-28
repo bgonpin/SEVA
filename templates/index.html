@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEVA</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #66ccff;
+            --accent-green: #4CAF50;
+            --accent-orange: #FF9800;
+            --accent-purple: #9C27B0;
+            --bg-dark: #1a1a1a;
+            --bg-card: #222;
+            --text-light: #f0f0f0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .custom-input {
+            background-color: #333 !important;
+            color: var(--text-light) !important;
+            border: 2px solid transparent !important;
+            transition: all 0.3s ease;
+            border-radius: 8px !important;
+        }
+
+        .custom-input:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 2px rgba(102, 204, 255, 0.2) !important;
+        }
+
+        .custom-input::placeholder {
+            color: #999 !important;
+        }
+
+        .custom-button {
+            background: linear-gradient(145deg, var(--primary-color), #5bb5e6) !important;
+            color: var(--bg-dark) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 10px 20px !important;
+        }
+
+        .custom-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 204, 255, 0.3);
+        }
+
+        .custom-button i {
+            margin-right: 5px;
+        }
+
+        .result-container {
+            background: linear-gradient(145deg, #2a2a2a, var(--bg-card));
+            border-radius: 12px;
+            min-height: 100px;
+            width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: var(--primary-color);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button-group .btn {
+            flex: 1;
+            min-width: auto;
+        }
+
+        .links-container {
+            background: rgba(102, 204, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .links-container h6 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .links-container a {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 5px;
+            border: 1px solid transparent;
+        }
+
+        .links-container a:before {
+            content: '\f0c1';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 8px;
+            color: var(--accent-orange);
+        }
+
+        .links-container a:hover {
+            background: rgba(102, 204, 255, 0.1);
+            transform: translateX(5px);
+            border-color: rgba(102, 204, 255, 0.2);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(34, 34, 34, 0.8);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            max-width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--primary-color);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .stat-value {
+            color: var(--text-light);
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .cost-value {
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .search-group {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            .button-group {
+                width: 100%;
+            }
+            .button-group .btn {
+                flex: 1;
+                min-width: auto;
+            }
+            #result {
+                margin-top: 20px;
+            }
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stat-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #cookie-banner {
+            background: linear-gradient(145deg, #2a2a2a, var(--bg-card));
+            border-top: 1px solid #333;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        #cookie-banner .btn {
+            padding: 5px 15px;
+        }
+    </style>
+</head>
+<body class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <span style="color: #66ccff; font-weight: bold;">Nitisimo 25.</span>
+            <h1 class="text-center m-0">SEVA</h1>
+            <span style="color: #66ccff; font-weight: bold;">V. B. 1.7.1</span>
+        </div>
+        
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-lg-10">
+                <form id="searchForm">
+                    <div class="search-group d-flex gap-3">
+                        <input type="text" id="query" name="query" class="form-control custom-input" placeholder="¿Qué quieres buscar?">
+                        <div class="button-group">
+                            <button type="submit" class="btn custom-button">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                            <button id="clearButton" class="btn custom-button">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button id="pdfButton" class="btn custom-button">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </button>
+                            <button id="novedadesButton" class="btn custom-button">
+                                <i class="fas fa-newspaper"></i> Novedades
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const query = document.getElementById('query').value;
+            if (!query) return;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner">
+                        <i class="fas fa-circle-notch fa-3x fa-spin"></i>
+                    </div>
+                    <p>Buscando información...</p>
+                </div>
+            `;
+
+            fetch(`/buscar?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const linksHtml = data.links ? `
+                        <div class="links-container animate-fade-in">
+                            <h6><i class="fas fa-link"></i> Enlaces relacionados</h6>
+                            ${data.links}
+                        </div>` : '';
+
+                    const statsHtml = `
+                        <div class="stats-container animate-fade-in">
+                            <div class="stat-card">
+                                <div class="stat-label"><i class="fas fa-clock"></i> Tiempo</div>
+                                <div class="stat-value">${data.duration.toFixed(2)}s</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label"><i class="fas fa-arrow-right"></i> Tokens entrada</div>
+                                <div class="stat-value">${data.input_tokens}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label"><i class="fas fa-arrow-left"></i> Tokens salida</div>
+                                <div class="stat-value">${data.output_tokens}</div>
+                            </div>
+                        </div>`;
+
+                    resultDiv.innerHTML = `
+                        ${linksHtml}
+                        <div class="result-container animate-fade-in">
+                            ${data.sumarizado}
+                        </div>
+                        ${statsHtml}
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `
+                        <div class="error animate-fade-in">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Error: ${error.message}
+                        </div>
+                    `;
+                });
+        });
+
+        // Limpiar resultados
+        document.getElementById('clearButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('query').value = '';
+            document.getElementById('result').innerHTML = '';
+        });
+
+        // Generar PDF
+        document.getElementById('pdfButton').addEventListener('click', async function(e) {
+            e.preventDefault();
+            const resultDiv = document.getElementById('result');
+            if (!resultDiv.innerHTML) return;
+
+            try {
+                const response = await fetch('/generate_pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: resultDiv.innerHTML
+                    })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'resultado.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                } else {
+                    throw new Error('Error al generar el PDF');
+                }
+            } catch (error) {
+                alert('Error al generar el PDF: ' + error.message);
+            }
+        });
+
+        // Botón de Novedades
+        document.getElementById('novedadesButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            const novedades = [
+                "Nueva funcionalidad de búsqueda mejorada.",
+                "Implementación de soporte para múltiples idiomas.",
+                "Actualización de la interfaz de usuario.",
+                "Corrección de errores menores.",
+                "Mejora en la velocidad de respuesta.",
+                "Actualización de la base de datos de conocimiento.",
+                "Se ha renovado la interfaz de usuario.",
+                "Se ha optimizado el proceso de tokenización y embedding",
+                "Se ha implementado un nuevo LLM como modelo de lenguaje.",
+            ];
+
+            let novedadesHTML = '<ul>';
+            novedades.forEach(novedad => {
+                novedadesHTML += `<li>${novedad}</li>`;
+            });
+            novedadesHTML += '</ul>';
+
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+                    <div style="background-color: #222; padding: 20px; border-radius: 10px; color: #f0f0f0; max-width: 600px;">
+                        <h4 style="color: #66ccff; margin-bottom: 15px;">Últimas Novedades (1.7.1)</h4>
+                        ${novedadesHTML}
+                        <button style="background: linear-gradient(145deg, #66ccff, #5bb5e6); color: #1a1a1a; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; margin-top: 15px;" onclick="this.parentNode.parentNode.remove()">Cerrar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        });
+    </script>
+</body>
+</html>
