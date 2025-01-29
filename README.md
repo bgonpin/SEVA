@@ -61,6 +61,13 @@ La aplicación estará disponible en `https://localhost:5000`
 
 La aplicación utiliza HTTPS con certificados SSL para una comunicación segura.
 
+Para generar los certificados SSL necesarios (`key.pem` y `cert.pem`), puedes usar los siguientes comandos de `openssl`:
+
+```bash
+openssl genrsa -out key.pem 2048
+openssl req -new -x509 -key key.pem -out cert.pem -days 365
+```
+
 ## 🤝 Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, lee [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre nuestro código de conducta y el proceso para enviarnos pull requests.
